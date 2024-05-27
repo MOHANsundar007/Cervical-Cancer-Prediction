@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cervical Cancer Risk Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+        }
+        label {
+            margin: 10px 0 5px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="button"], input[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="button"]:hover, input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            z-index: 1;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <h1>Cervical Cancer Risk Prediction</h1>
+        <h2>Fill in the details below</h2>
+        <form id="predictionForm" action="/predict" method="post">
+            <div class="form-step active">
+                <label for="Schiller">Schiller:</label>
+                <input type="text" id="Schiller" name="Schiller" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="Hinselmann">Hinselmann:</label>
+                <input type="text" id="Hinselmann" name="Hinselmann" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="Citology">Citology:</label>
+                <input type="text" id="Citology" name="Citology" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="STDs">STDs:</label>
+                <input type="text" id="STDs" name="STDs" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="Hormonal_Contraceptives_years">Hormonal Contraceptives (years):</label>
+                <input type="text" id="Hormonal_Contraceptives_years" name="Hormonal_Contraceptives_years" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="Smokes_years">Smokes (years):</label>
+                <input type="text" id="Smokes_years" name="Smokes_years" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="IUD">IUD:</label>
+                <input type="text" id="IUD" name="IUD" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="Age">Age:</label>
+                <input type="text" id="Age" name="Age" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="Hormonal_Contraceptives">Hormonal Contraceptives:</label>
+                <input type="text" id="Hormonal_Contraceptives" name="Hormonal_Contraceptives" required>
+                <input type="button" value="Next" onclick="nextStep()">
+            </div>
+            <div class="form-step">
+                <label for="IUD_years">IUD (years):</label>
+                <input type="text" id="IUD_years" name="IUD_years" required>
+                <input type="submit" value="Predict">
+            </div>
+        </form>
+        <div class="result">
+            {% if prediction_text %}
+                <h3>{{ prediction_text }}</h3>
+                <audio id="resultAudio" autoplay>
+                    <source src="{% if prediction_text == 'Cancer Risk: Positive' %}/static/positive.mp3{% else %}/static/negative.mp3{% endif %}" type="audio/mp3">
+                </audio>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.form-step');
+
+        function nextStep() {
+            steps[currentStep].classList.remove('active');
+            currentStep++;
+            steps[currentStep].classList.add('active');
+        }
+    </script>
+</body>
+</html>
